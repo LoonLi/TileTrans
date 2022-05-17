@@ -1,0 +1,6 @@
+data/*
+log/*
+plot/*
+__pycache__
+*.sh
+*.bash
