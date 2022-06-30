@@ -9,7 +9,6 @@ import torchvision.models as models
 import torch.utils.data as Data
 import common
 from metrics import Metrics, MetricsL1, MetricsGradient
-import dst
 from itertools import zip_longest
 
 class ReconMethod():
@@ -159,24 +158,3 @@ class Reconstructor():
                 bns_group = []
             
             return recon_dic
-
-if __name__ == "__main__":
-
-    net = models.resnet34(pretrained=True)
-
-    recon = Reconstructor()
-    recon(net)
-    dst.distributed_train(net, 
-                    load_name=None, 
-                    epochs=1,
-                    steps_stop=50,
-                    early_stop=0.01,
-                    per_worker_batch_size=64, 
-                    lr=0.001,
-                    scheduler_type="null",
-                    is_only_valid=False,
-                    dataset="ImageNet", 
-                    worker_nums=8, 
-                    log_server_port=19998,
-                    master="c5",
-                    find_unused_parameters=True)

@@ -8,29 +8,6 @@ import matplotlib.pyplot as plt
 import sys
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
-# import models.models_sparse.layers as nn_flags
-import loader
-
-def check_correct_rate(net, test_loader):
-    correct_num = 0
-
-    net.cuda()
-    net.eval()
-    with torch.no_grad():
-        print_interval_steps = len(test_loader)//10
-        for step, (x, y) in enumerate(test_loader):
-            b_x = x.cuda()
-            b_y = y.cuda()
-            output = net(b_x)
-
-            prey_y = torch.max(output, 1)[1].cuda().data
-            correct_num += torch.sum(prey_y == b_y).type(torch.FloatTensor)
-            if step%print_interval_steps==0:
-                print("{}/{}...".format(step, len(test_loader)))
-    net.train()
-
-    return float(correct_num/len(test_loader.dataset))
-
 
 def print_model_weight(net):
     for layer in net.children():
@@ -99,17 +76,6 @@ def check_model_saprsity(net):
 
 def worker_init(wrk_id):
     np.random.seed(torch.utils.data.get_worker_info().seed%(2**32 - 1))
-
-def check_ImangeNet_model_accuracy(net:torch.nn.Module, batch_size:int=16) -> float:
-    transform = transforms.Compose([
-    transforms.Resize(256),
-    transforms.CenterCrop(224),
-    transforms.ConvertImageDtype(torch.float),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    ])
-    test_set = loader.ImageNetDataset(val=True, transform=transform)
-    test_loader = Data.DataLoader(test_set, batch_size=batch_size, num_workers=4, worker_init_fn=worker_init, pin_memory=torch.cuda.is_available())
-    return check_correct_rate(net, test_loader)
 
 def get_dataset(dataset:str="ImageNet"):
     transform = transforms.Compose([

@@ -1,6 +1,10 @@
 data/*
+model/*
 log/*
 plot/*
 __pycache__
 *.sh
 *.bash
+trained_model
+pruned_model
+.ipynb_checkpoints/*
